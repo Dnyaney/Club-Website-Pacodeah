@@ -1,1 +1,1 @@
-web: python manage.py migrate && python manage.py collectstatic --noinput && gunicorn club_website.wsgi
+web: python manage.py migrate && python manage.py collectstatic --noinput && gunicorn club_website.wsgi --bind 0.0.0.0:$PORT
