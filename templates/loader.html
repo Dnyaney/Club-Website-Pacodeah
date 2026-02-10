@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>paCODEah</title>
+    <link rel="stylesheet" href="{% static 'styles/loader.css' %}">
+    <link rel="icon" type="image/jpeg" href="{% static 'images/dark_logo.jpeg' %}">
+</head>
+<body data-target-url="{% url 'landing_page' %}">
+    <div class="loader1"></div>
+    <div class="loader2">
+        <div class="logo">
+            <div class="first">
+                <div class="eyes">
+                    <div class="eye"></div>
+                    <div class="eyelid"></div>
+                </div>
+                <img src="{% static 'images/dark_letterhead02.png' %}" alt="first line logo">
+            </div>
+            <div class="second">
+                <div class="b1 binary">110110101001001</div>
+                <div class="text">
+                    <img src="{% static 'images/dark_letterhead (copy).png' %}" alt="second line logo">
+                </div>
+                <div class="b2 binary">101001010011100</div>
+            </div>
+        </div>
+    </div>
+    {% comment %} <script src="{% static 'scripts/loader.js' %}"></script> {% endcomment %}
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+        const body = document.body;
+        const targetUrl = body.getAttribute('data-target-url');
+
+        // Ensure the URL exists before trying to redirect
+        if (targetUrl) {
+            setTimeout(() => {
+                window.location.href = targetUrl;
+            }, 1750); 
+        } else {
+            console.error("Target URL not found on body data-target-url attribute.");
+        }
+        });
+    </script>
+</body>
+</html>

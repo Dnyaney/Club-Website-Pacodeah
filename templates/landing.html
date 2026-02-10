@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'styles/landing.css' %}">
+    <link rel="icon" type="image/jpeg" href="{% static 'images/dark_logo.jpeg' %}">
+    <title>paCODEah</title>
+</head>
+<body>
+    <video autoplay muted loop class="bg-video">
+        <source src="{% static 'images/vid.mp4' %}" type="video/mp4">
+    </video>
+    <nav>
+        <div class="nav1">
+            <div class="logo">
+                <img src="{% static 'images/dark_letterhead.png' %}" alt="Logo">
+            </div>
+        </div>
+        <div class="nav2">
+            <div class="home hidden">Home</div>
+            <div class="event hidden">Events</div>
+            <div class="team hidden">Team</div>
+            <div class="gallery hidden">Gallery</div>
+            <div class="contact hidden">Contact</div>
+        </div>
+    </nav>
+    <main>
+        <div class="tex hidden"><img src="{% static 'images/PaCODEah.png' %}" alt="pacodeah"></div>
+        <div class="subtex ibm-plex-mono-regular hidden">The Tech Club of IISER Tirupati</div>
+        <div class="exp_butt hidden">EXPLORE</div>
+    </main>
+        <script>
+        window.addEventListener('DOMContentLoaded', () => {
+            const navElements = [...document.querySelectorAll('.nav2 > div')];
+            const mainElements = [
+                document.querySelector('.tex'),
+                document.querySelector('.subtex'),
+                document.querySelector('.exp_butt')
+            ].filter(Boolean);
+
+            function showNavSequentially(index = 0) {
+                if (index < navElements.length) {
+                    const el = navElements[index];
+                    el.classList.remove('hidden');
+                    el.classList.add('fade-in');
+                    setTimeout(() => showNavSequentially(index + 1), 150);
+                }
+            }
+
+            function showMainSequentially(index = 0) {
+                if (index < mainElements.length) {
+                    const el = mainElements[index];
+                    el.classList.remove('hidden');
+                    el.classList.add('fade-in');
+                    
+                    setTimeout(() => {
+                        el.classList.remove('fade-in');
+                        el.classList.add('visible');
+                    }, 700); 
+
+                    setTimeout(() => showMainSequentially(index + 1), 350);
+                }
+            }
+
+            showNavSequentially();
+            setTimeout(() => showMainSequentially(), navElements.length * 150);
+        });
+    </script>
+</body>
+</html>
