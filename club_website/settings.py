@@ -41,13 +41,13 @@ MIDDLEWARE = [
 # ... (TEMPLATES and WSGI remain same)
 
 # Database: Use DATABASE_URL from Railway, fallback to SQLite for local work
+BASE_DIR = Path(__file__).resolve().parent.parent
 DATABASES = {
     'default': dj_database_url.config(
         default=f"sqlite:///{BASE_DIR / 'db.sqlite3'}",
         conn_max_age=600
     )
 }
-
 # ... (Password validators and i18n remain same)
 
 # Static files
