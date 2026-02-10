@@ -1,21 +1,16 @@
 import os
-import dj_database_url # Make sure to pip install this
+import dj_database_url
 from pathlib import Path
 
-# ... (BASE_DIR remains the same)
+# 1. BASE_DIR must be at the very top
+BASE_DIR = Path(__file__).resolve().parent.parent
 
-# SECURITY: Get key from environment or use a dummy for local dev
-SECRET_KEY = os.environ.get('SECRET_KEY', 'your-default-local-key')
-
-# SECURITY: Never run with debug on in production
+# 2. Security settings
+SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-local-dev-key')
 DEBUG = os.environ.get('DEBUG', 'False') == 'True'
+ALLOWED_HOSTS = ['*']
 
-# Railway provides the domain, but we'll allow all railway apps and localhost
-ALLOWED_HOSTS = ['*'] 
-if os.environ.get('RAILWAY_STATIC_URL'):
-    ALLOWED_HOSTS.append(os.environ.get('RAILWAY_STATIC_URL'))
-
-# Application definition
+# 3. Application definition
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -24,12 +19,12 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'pacodeah',
-    'whitenoise.runserver_nostatic', # Add this for better static handling
+    'whitenoise.runserver_nostatic', 
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware', # REQUIRED for Railway
+    'whitenoise.middleware.WhiteNoiseMiddleware', 
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -38,25 +33,57 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-# ... (TEMPLATES and WSGI remain same)
+ROOT_URLCONF = 'club_website.urls'
 
-# Database: Use DATABASE_URL from Railway, fallback to SQLite for local work
-BASE_DIR = Path(__file__).resolve().parent.parent
+# 4. FIX: The missing TEMPLATES block
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [BASE_DIR / 'templates'],
+        'APP_DIRS': True,
+        'OPTIONS': {
+            'context_processors': [
+                'django.template.context_processors.debug',
+                'django.template.context_processors.request',
+                'django.contrib.auth.context_processors.auth',
+                'django.contrib.messages.context_processors.messages',
+            ],
+        },
+    },
+]
+
+WSGI_APPLICATION = 'club_website.wsgi.application'
+
+# 5. Database
 DATABASES = {
     'default': dj_database_url.config(
         default=f"sqlite:///{BASE_DIR / 'db.sqlite3'}",
         conn_max_age=600
     )
 }
-# ... (Password validators and i18n remain same)
 
-# Static files
+# 6. Password validation
+AUTH_PASSWORD_VALIDATORS = [
+    {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
+    {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator'},
+    {'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator'},
+    {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator'},
+]
+
+# 7. Internationalization
+LANGUAGE_CODE = 'en-us'
+TIME_ZONE = 'UTC'
+USE_I18N = True
+USE_TZ = True
+
+# 8. Static files (WhiteNoise setup)
 STATIC_URL = 'static/'
-STATIC_ROOT = BASE_DIR / 'staticfiles' # New line: where files go on collectstatic
+STATIC_ROOT = BASE_DIR / 'staticfiles'
 STATICFILES_DIRS = [BASE_DIR / 'static']
-
-# This tells WhiteNoise to compress and cache your files
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
-# CSRF Settings for production
+# 9. Default primary key field type
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# 10. CSRF Settings
 CSRF_TRUSTED_ORIGINS = ['https://*.railway.app']
